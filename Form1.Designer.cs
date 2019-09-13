@@ -41,6 +41,7 @@
             this.txtdystansmiesiac = new System.Windows.Forms.TextBox();
             this.panel5 = new System.Windows.Forms.Panel();
             this.lblDzienzTabeli = new System.Windows.Forms.Label();
+            this.btnZapiszDystans = new System.Windows.Forms.Button();
             this.lblOpisDystans = new System.Windows.Forms.Label();
             this.lblOpisUwagi = new System.Windows.Forms.Label();
             this.lblOpisWaga = new System.Windows.Forms.Label();
@@ -74,7 +75,6 @@
             this.plnWeightPlot = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.btnWyjscie = new System.Windows.Forms.Button();
-            this.btnZapiszDystans = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
@@ -251,6 +251,18 @@
             this.lblDzienzTabeli.Size = new System.Drawing.Size(0, 22);
             this.lblDzienzTabeli.TabIndex = 3;
             this.lblDzienzTabeli.Click += new System.EventHandler(this.Label14_Click);
+            // 
+            // btnZapiszDystans
+            // 
+            this.btnZapiszDystans.Location = new System.Drawing.Point(432, 283);
+            this.btnZapiszDystans.Name = "btnZapiszDystans";
+            this.btnZapiszDystans.Size = new System.Drawing.Size(129, 58);
+            this.btnZapiszDystans.TabIndex = 0;
+            this.btnZapiszDystans.Text = "Zapisz";
+            this.btnZapiszDystans.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnZapiszDystans.UseVisualStyleBackColor = true;
+            this.btnZapiszDystans.Visible = false;
+            this.btnZapiszDystans.Click += new System.EventHandler(this.BtnZapiszDystans_Click);
             // 
             // lblOpisDystans
             // 
@@ -644,18 +656,6 @@
             this.btnWyjscie.UseVisualStyleBackColor = true;
             this.btnWyjscie.Click += new System.EventHandler(this.BtnWyjscie_Click);
             // 
-            // btnZapiszDystans
-            // 
-            this.btnZapiszDystans.Location = new System.Drawing.Point(432, 283);
-            this.btnZapiszDystans.Name = "btnZapiszDystans";
-            this.btnZapiszDystans.Size = new System.Drawing.Size(129, 58);
-            this.btnZapiszDystans.TabIndex = 0;
-            this.btnZapiszDystans.Text = "Zapisz";
-            this.btnZapiszDystans.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.btnZapiszDystans.UseVisualStyleBackColor = true;
-            this.btnZapiszDystans.Visible = false;
-            this.btnZapiszDystans.Click += new System.EventHandler(this.BtnZapiszDystans_Click);
-            // 
             // button6
             // 
             this.button6.Location = new System.Drawing.Point(17, 453);
@@ -739,6 +739,19 @@
             // 
             this.comMiesiac.Font = new System.Drawing.Font("Courier New", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.comMiesiac.FormattingEnabled = true;
+            this.comMiesiac.Items.AddRange(new object[] {
+            "Styczeń",
+            "Luty",
+            "Marzec",
+            "Kwiecień",
+            "Maj",
+            "Czerwiec",
+            "Lipiec",
+            "Sierpień",
+            "Wrzesień",
+            "Październik",
+            "Listopad",
+            "Grudzień"});
             this.comMiesiac.Location = new System.Drawing.Point(327, 22);
             this.comMiesiac.Name = "comMiesiac";
             this.comMiesiac.Size = new System.Drawing.Size(182, 31);

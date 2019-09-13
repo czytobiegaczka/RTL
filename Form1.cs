@@ -17,6 +17,7 @@ namespace RTL
     {
         public int ileWag;
         public double wmin;
+        private DBConnect BazaLacze;
 
         public frmRTL()
         {
