@@ -17,6 +17,9 @@ namespace RTL
         private string database;
         private string uid;
         private string password;
+        public string[] arr = new string[4];
+        public object lstMiesiac;
+
 
         //Constructor
         public DBConnect()
@@ -100,6 +103,105 @@ namespace RTL
                 this.CloseConnection();
             }
         }
+
+        public void WyswietlMiesiac(int rok,int mie)
+        {
+            string query = "SELECT miesiac.data as data, miesiac.dzien as dzien,waga.waga as waga FROM miesiac LEFT JOIN waga on miesiac.waga_Id=waga.waga_Id";
+
+             //Open connection
+            if (this.OpenConnection() == true)
+            {
+                //Create Command
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                //Create a data reader and Execute the command
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                //Read the data and store them in the list
+                if (dataReader.HasRows)
+                {
+                    while (dataReader.Read())
+                    {
+                        arr[0]=dataReader["data"].ToString();
+                        arr[1]=dataReader["dzien"].ToString();
+                        arr[2]=dataReader["waga"].ToString();
+                    }
+                    //close Data Reader
+                    dataReader.Close();
+
+                    ListViewItem itm;
+                    for (int i = 1; i <= 30; i++)
+                    {
+                        //DateTime dt = new DateTime(DateTime.Now.Year, miesiac, i);
+                        //arr[0] = dt.ToShortDateString();
+                        //arr[1] = dt.ToString("dddd");
+                        //arr[2] = "";
+                        //arr[3] = "";
+                        itm = new ListViewItem(arr);
+                        lstMiesiac.Item.Add(itm);
+    
+                    }
+
+                    //close Connection
+                    this.CloseConnection();
+                }
+                else
+                {
+                    this.InsertNowyMiesiac(rok, mie);
+                }
+
+
+                //close Data Reader
+                dataReader.Close();
+
+                //close Connection
+                this.CloseConnection();
+                
+
+                //return list to be displayed
+                //return arr;
+            }
+            else
+            {
+                //return list;
+            }
+        }
+        //Insert statement
+        public void InsertNowyMiesiac(int jakirok,int jakimie)
+        {
+            int daysInMounth = System.DateTime.DaysInMonth(jakirok, jakimie);
+            string liczdata;
+            string liczdzien;
+            string ciag;
+
+            ciag= "";
+
+            //open connection
+            if (this.OpenConnection() == true)
+            {
+                for (int licz = 1; licz <= daysInMounth; licz++)
+                {
+                    MySqlCommand cmd = new MySqlCommand(ciag, connection);
+                    //ciag = ;
+                    //create command and assign the query and connection from the constructor
+                    cmd.CommandText = "INSERT INTO miesiac (data,dzien) VALUES(@wpiszData,@wpiszDzien)";
+                    cmd.Prepare();
+
+                    DateTime dt = new DateTime(jakirok, jakimie, licz);
+                    liczdata = dt.ToShortDateString();
+                    liczdzien = dt.ToString("dddd");
+
+                    cmd.Parameters.AddWithValue("@wpiszData", liczdata);
+                    cmd.Parameters.AddWithValue("@wpiszDzien", liczdzien);
+
+                    cmd.ExecuteNonQuery();
+                }
+
+
+                //close connection
+                this.CloseConnection();
+            }
+        }
+        
 
         //Update statement
         public void Update()

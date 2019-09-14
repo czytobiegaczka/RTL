@@ -17,11 +17,13 @@ namespace RTL
     {
         public int ileWag;
         public double wmin;
-        private DBConnect BazaLacze;
+        private DBConnect BazaLacze; //łącze do bazy danych MySQL
+     
 
         public frmRTL()
         {
             InitializeComponent();
+            BazaLacze = new DBConnect();
         }
 
         MySqlConnection connection;
@@ -37,6 +39,8 @@ namespace RTL
 
             lblMiesiacRok.Text = nazmie + " " + DateTime.Now.Year.ToString() + " r.";
 
+            BazaLacze.WyswietlMiesiac(DateTime.Now.Year, miesiac);
+
             //Inicjalizacja listy miesięcznej
 
             lstMiesiac.View = View.Details;
@@ -50,23 +54,23 @@ namespace RTL
             lstMiesiac.Columns.Add("Dystans", 100, HorizontalAlignment.Right);
 
 
-
+            
             //Add items in the listview
-            string[] arr = new string[4];
+            //string[] arr = new string[4];
             ListViewItem itm;
 
-            for (int i = 1; i <= days; i++)
+            for (int i = 1; i <= 30; i++)
             {
-                DateTime dt = new DateTime(DateTime.Now.Year, miesiac, i);
-                arr[0] = dt.ToShortDateString();
-                arr[1] = dt.ToString("dddd");
-                arr[2] = "";
-                arr[3] = "";
+                //DateTime dt = new DateTime(DateTime.Now.Year, miesiac, i);
+                //arr[0] = dt.ToShortDateString();
+                //arr[1] = dt.ToString("dddd");
+                //arr[2] = "";
+                //arr[3] = "";
                 itm = new ListViewItem(arr);
                 lstMiesiac.Items.Add(itm);           }
 
             // otwarcie sesji bazy danych
-            try
+ /*           try
             {
                 connection = new MySqlConnection("datasource=sql7.freesqldatabase.com;port=3306;username=sql7302398;password=HsDmvTJ3Ar;convert zero datetime=True");
 
@@ -137,7 +141,7 @@ namespace RTL
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-            }
+            }*/
         }
 
     
@@ -148,7 +152,7 @@ namespace RTL
 
         private void BtnWyjscie_Click(object sender, EventArgs e)
         {
-            connection.Close();
+            BazaLacze.Close();
         }
 
 

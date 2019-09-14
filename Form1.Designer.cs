@@ -866,7 +866,7 @@
         private System.Windows.Forms.Panel pnlCalkowity;
         private System.Windows.Forms.Label lblCalkowityNaRok;
         private System.Windows.Forms.Label lblDystansCalkowity;
-        private System.Windows.Forms.ListView lstMiesiac;
+        public System.Windows.Forms.ListView lstMiesiac;
         private System.Windows.Forms.Button btnZapiszDystans;
         private System.Windows.Forms.Panel pnlWeight;
         private System.Windows.Forms.Panel plnWeightPlot;
