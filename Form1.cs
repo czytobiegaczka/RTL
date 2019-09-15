@@ -18,6 +18,7 @@ namespace RTL
         public int ileWag;
         public double wmin;
         private DBConnect BazaLacze; //łącze do bazy danych MySQL
+
      
 
         public frmRTL()
@@ -26,7 +27,7 @@ namespace RTL
             BazaLacze = new DBConnect();
         }
 
-        MySqlConnection connection;
+
         private void Form1_Load(object sender, EventArgs e)
         {
             // ustawia rok i miesiąc na aktualny
@@ -39,7 +40,7 @@ namespace RTL
 
             lblMiesiacRok.Text = nazmie + " " + DateTime.Now.Year.ToString() + " r.";
 
-            BazaLacze.WyswietlMiesiac(DateTime.Now.Year, miesiac);
+            
 
             //Inicjalizacja listy miesięcznej
 
@@ -53,21 +54,26 @@ namespace RTL
             lstMiesiac.Columns.Add("Waga", 100, HorizontalAlignment.Right);
             lstMiesiac.Columns.Add("Dystans", 100, HorizontalAlignment.Right);
 
+            int licznikWierszy = BazaLacze.LicznikRekordow();
+            int licznikKolumn = 3;
 
             
+            string[,] tabela = new string[licznikWierszy, licznikKolumn];
+            tabela=BazaLacze.PobierzMiesiac(licznikWierszy, licznikKolumn);
+
             //Add items in the listview
-            //string[] arr = new string[4];
+            string[] arr = new string[4];
             ListViewItem itm;
 
-            for (int i = 1; i <= 30; i++)
+            for (int i = 0; i < licznikWierszy; i++)
             {
-                //DateTime dt = new DateTime(DateTime.Now.Year, miesiac, i);
-                //arr[0] = dt.ToShortDateString();
-                //arr[1] = dt.ToString("dddd");
-                //arr[2] = "";
-                //arr[3] = "";
+                arr[0] = tabela[i,0];
+                arr[1] = tabela[i,1];
+                arr[2] = tabela[i,2];
+                arr[3] = "";
                 itm = new ListViewItem(arr);
-                lstMiesiac.Items.Add(itm);           }
+                lstMiesiac.Items.Add(itm);
+            }
 
             // otwarcie sesji bazy danych
  /*           try
@@ -152,7 +158,7 @@ namespace RTL
 
         private void BtnWyjscie_Click(object sender, EventArgs e)
         {
-            BazaLacze.Close();
+            //BazaLacze.Close();
         }
 
 

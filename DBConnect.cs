@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +20,7 @@ namespace RTL
         private string uid;
         private string password;
         public string[] arr = new string[4];
-        public object lstMiesiac;
+
 
 
         //Constructor
@@ -104,67 +106,68 @@ namespace RTL
             }
         }
 
-        public void WyswietlMiesiac(int rok,int mie)
+        public int LicznikRekordow()
         {
-            string query = "SELECT miesiac.data as data, miesiac.dzien as dzien,waga.waga as waga FROM miesiac LEFT JOIN waga on miesiac.waga_Id=waga.waga_Id";
+            string query = "SELECT COUNT(*) FROM sql7302398.miesiac";
+            int suma = 0;
 
-             //Open connection
+            //Open connection
             if (this.OpenConnection() == true)
             {
                 //Create Command
                 MySqlCommand cmd = new MySqlCommand(query, connection);
+ 
                 //Create a data reader and Execute the command
-                MySqlDataReader dataReader = cmd.ExecuteReader();
+                suma= int.Parse(cmd.ExecuteScalar().ToString());
 
-                //Read the data and store them in the list
-                if (dataReader.HasRows)
-                {
-                    while (dataReader.Read())
-                    {
-                        arr[0]=dataReader["data"].ToString();
-                        arr[1]=dataReader["dzien"].ToString();
-                        arr[2]=dataReader["waga"].ToString();
-                    }
-                    //close Data Reader
-                    dataReader.Close();
+            }
+            this.CloseConnection();
+            return suma;
+        }
 
-                    ListViewItem itm;
-                    for (int i = 1; i <= 30; i++)
-                    {
-                        //DateTime dt = new DateTime(DateTime.Now.Year, miesiac, i);
-                        //arr[0] = dt.ToShortDateString();
-                        //arr[1] = dt.ToString("dddd");
-                        //arr[2] = "";
-                        //arr[3] = "";
-                        itm = new ListViewItem(arr);
-                        lstMiesiac.Item.Add(itm);
-    
-                    }
+        public string[,] PobierzMiesiac(int wiersze,int kolumny)
+        {
+            string query = "SELECT miesiac.data as data, miesiac.dzien as dzien,waga.waga as waga FROM miesiac LEFT JOIN waga on miesiac.waga_Id=waga.waga_Id";
+            string[,] tablica = new string[wiersze+1,kolumny+1];
 
-                    //close Connection
-                    this.CloseConnection();
-                }
-                else
-                {
-                    this.InsertNowyMiesiac(rok, mie);
-                }
+             //Open connection
+            if (this.OpenConnection() == true)
+            {
+ 
+                MySqlDataAdapter adapter = new MySqlDataAdapter(query, connection);
+                DataSet ds = new DataSet();
+                adapter.Fill(ds, "miesiac");
 
+                int w = 0;
+                int k = 0;
 
-                //close Data Reader
-                dataReader.Close();
-
-                //close Connection
-                this.CloseConnection();
                 
 
-                //return list to be displayed
-                //return arr;
-            }
-            else
-            {
-                //return list;
-            }
+                foreach (DataTable myTable in ds.Tables)
+                {
+                    foreach (DataRow myRow in myTable.Rows)
+                    {
+                        foreach (DataColumn myColumn in myTable.Columns)
+                        {
+                            tablica[w, k] = myRow[myColumn].ToString();
+                            k++;
+                        }
+                        k = 0;
+                        w++;
+                    }
+                }
+
+ 
+                connection.Close();
+                
+                //close Connection
+                this.CloseConnection();
+             }
+
+            return tablica;
         }
+
+ 
         //Insert statement
         public void InsertNowyMiesiac(int jakirok,int jakimie)
         {

@@ -1,0 +1,16 @@
+C:\Users\Anetta\source\repos\RTL\bin\Release\RTL.exe.config
+C:\Users\Anetta\source\repos\RTL\bin\Release\RTL.exe
+C:\Users\Anetta\source\repos\RTL\bin\Release\RTL.pdb
+C:\Users\Anetta\source\repos\RTL\bin\Release\MySql.Data.dll
+C:\Users\Anetta\source\repos\RTL\bin\Release\Google.Protobuf.dll
+C:\Users\Anetta\source\repos\RTL\bin\Release\Renci.SshNet.dll
+C:\Users\Anetta\source\repos\RTL\bin\Release\BouncyCastle.Crypto.dll
+C:\Users\Anetta\source\repos\RTL\bin\Release\MySql.Data.xml
+C:\Users\Anetta\source\repos\RTL\obj\Release\RTL.csprojAssemblyReference.cache
+C:\Users\Anetta\source\repos\RTL\obj\Release\RTL.frmRTL.resources
+C:\Users\Anetta\source\repos\RTL\obj\Release\RTL.Properties.Resources.resources
+C:\Users\Anetta\source\repos\RTL\obj\Release\RTL.csproj.GenerateResource.cache
+C:\Users\Anetta\source\repos\RTL\obj\Release\RTL.csproj.CoreCompileInputs.cache
+C:\Users\Anetta\source\repos\RTL\obj\Release\RTL.csproj.CopyComplete
+C:\Users\Anetta\source\repos\RTL\obj\Release\RTL.exe
+C:\Users\Anetta\source\repos\RTL\obj\Release\RTL.pdb
