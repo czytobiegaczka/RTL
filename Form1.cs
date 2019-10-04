@@ -17,33 +17,53 @@ namespace RTL
     {
         public int ileWag;
         public double wmin;
+        public string[] miesicNr = { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12" };
         private DBConnect BazaLacze; //łącze do bazy danych MySQL
 
      
 
         public frmRTL()
         {
-            InitializeComponent();
+            
             BazaLacze = new DBConnect();
+            InitializeComponent();
         }
 
 
         private void Form1_Load(object sender, EventArgs e)
         {
             // ustawia rok i miesiąc na aktualny
-            comRok.Text = DateTime.Now.Year.ToString();
+            //dateTimePickerYear.Text = DateTime.Now.Year.ToString();
             //sprawdza aktualny miesiąc
-            int miesiac = DateTime.Now.Month;
-            int days = DateTime.DaysInMonth(DateTime.Now.Year, miesiac);
-            string nazmie = NazwaMiesiaca(miesiac);
+            //int miesiac = DateTime.Now.Month;
+            //int days = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+            tabBiegi.SelectedIndex = 0;
+            string nazmie = NazwaMiesiaca(DateTime.Now.Month);
             comMiesiac.Text = nazmie;
 
             lblMiesiacRok.Text = nazmie + " " + DateTime.Now.Year.ToString() + " r.";
 
-            
+            wyswietl_lstMiesiac(DateTime.Now.Month, DateTime.Now.Year);
+            wyswietl_lblDystansCalkowity(miesicNr[DateTime.Now.Month-1], DateTime.Now.Year.ToString());
+        }
 
+
+        private void wyswietl_lstMiesiac(int mie,int ro)
+        {
             //Inicjalizacja listy miesięcznej
 
+            lblDystansMiesiac.Text = "";
+            lblSredniaMiesiac.Text = "";
+
+            lblDzienzTabeli.Text = "";
+            lblOpisDystans.Visible = false;
+            lblOpisWaga.Visible = false;
+            lblDystansDzien.Visible = false;
+            lblWagaDzien.Visible = false;
+            txtDystansDzien.Visible = false;
+            txtWagaDzien.Visible = false;
+
+            lstMiesiac.Clear();
             lstMiesiac.View = View.Details;
             lstMiesiac.GridLines = true;
             lstMiesiac.FullRowSelect = true;
@@ -54,103 +74,67 @@ namespace RTL
             lstMiesiac.Columns.Add("Waga", 100, HorizontalAlignment.Right);
             lstMiesiac.Columns.Add("Dystans", 100, HorizontalAlignment.Right);
 
-            int licznikWierszy = BazaLacze.LicznikRekordow();
-            int licznikKolumn = 3;
 
-            
+            int licznikWierszy = System.DateTime.DaysInMonth(ro, mie);
+            int licznikKolumn = 4;
             string[,] tabela = new string[licznikWierszy, licznikKolumn];
-            tabela=BazaLacze.PobierzMiesiac(licznikWierszy, licznikKolumn);
 
-            //Add items in the listview
-            string[] arr = new string[4];
-            ListViewItem itm;
-
-            for (int i = 0; i < licznikWierszy; i++)
+            if (BazaLacze.LicznikRekordow(miesicNr[mie-1], ro.ToString()) != 0)
             {
-                arr[0] = tabela[i,0];
-                arr[1] = tabela[i,1];
-                arr[2] = tabela[i,2];
-                arr[3] = "";
-                itm = new ListViewItem(arr);
-                lstMiesiac.Items.Add(itm);
+
+                //string[,] tabela = new string[licznikWierszy, licznikKolumn];
+                tabela = BazaLacze.PobierzMiesiac(licznikWierszy, licznikKolumn, miesicNr[mie-1], ro.ToString());
+
+                //Add items in the listview
+                string[] arr = new string[4];
+                ListViewItem itm;
+
+                for (int i = 0; i < licznikWierszy; i++)
+                {
+                    arr[0] = tabela[i, 0];
+                    arr[1] = tabela[i, 1];
+                    arr[2] = tabela[i, 2];
+                    arr[3] = tabela[i, 3];
+                    itm = new ListViewItem(arr);
+                    lstMiesiac.Items.Add(itm);
+                }
+
+            }
+            else
+            {
+                BazaLacze.InsertNowyMiesiac(ro, mie);
+                //string[,] tabela = new string[licznikWierszy, licznikKolumn];
+                tabela = BazaLacze.PobierzMiesiac(licznikWierszy, licznikKolumn, miesicNr[mie - 1], ro.ToString());
+
+                //Add items in the listview
+                string[] arr = new string[4];
+                ListViewItem itm;
+
+                for (int i = 0; i < licznikWierszy; i++)
+                {
+                    arr[0] = tabela[i, 0];
+                    arr[1] = tabela[i, 1];
+                    arr[2] = tabela[i, 2];
+                    arr[3] = tabela[i, 3];
+                    itm = new ListViewItem(arr);
+                    lstMiesiac.Items.Add(itm);
+                }
+
             }
 
-            // otwarcie sesji bazy danych
- /*           try
+            lblDzienzTabeli.Text = lstMiesiac.Items[0].SubItems[0].Text + " " + lstMiesiac.Items[0].SubItems[1].Text;
+
+            if (lstMiesiac.Items[0].SubItems[3].Text != "")
             {
-                connection = new MySqlConnection("datasource=sql7.freesqldatabase.com;port=3306;username=sql7302398;password=HsDmvTJ3Ar;convert zero datetime=True");
-
-                //DBConnect polaczenie;
-                //polaczenie = new DBConnect();
-
-               
-                MySqlDataAdapter adapter = new MySqlDataAdapter("select * from sql7302398.waga", connection);
-                MySqlCommand sumaDystans = new MySqlCommand("select sum(dystans) from sql7302398.waga", connection);
-                MySqlCommand licznikRekordow = new MySqlCommand("select count(*) from sql7302398.waga", connection);
-                
-
-                string selectRok = "select sum(dystans) from sql7302398.waga where data>\"" + DateTime.Now.Year.ToString() + "-08-15\""; //UWAGA! Zmienić na 01-01
-                MySqlCommand sumaDystansRok = new MySqlCommand(selectRok, connection);
-
-                connection.Open();
-                DataSet ds = new DataSet();
-                adapter.Fill(ds, "waga");
-
-                string licznikcalkowity = Convert.ToString(sumaDystans.ExecuteScalar());
-                lblDystansCalkowity.Text = "Dystans przebiegnięty od 12 marca 2011 roku - " + licznikcalkowity + " km";
-
-                string licznikRok = Convert.ToString(sumaDystansRok.ExecuteScalar());
-                lblCalkowityNaRok.Text = "Dystans przebiegnięty w " + DateTime.Now.Year.ToString() + " roku - " + licznikRok + " km";
-
-                lblDzienzTabeli.Text = lstMiesiac.Items[0].SubItems[0].Text;
-
-                int w = 1;
-                int k = 1;
-
-
-                int licznikWierszy = Convert.ToInt16(licznikRekordow.ExecuteScalar())+1;
-                int licznikKolumn = 4 + 1;
-
-                string[,] tablica = new string[licznikWierszy, licznikKolumn];
-
-                foreach (DataTable myTable in ds.Tables)
-                {
-                    foreach (DataRow myRow in myTable.Rows)
-                    {
-                        foreach (DataColumn myColumn in myTable.Columns)
-                        {
-                            tablica[w, k] = myRow[myColumn].ToString();
-                            k++;
-                        }
-                        k = 1;
-                        w++;
-                    }
-                }
-                connection.Close();
-
-
-                ileWag = 0;
-                for (int i = 1; i < licznikWierszy; i++)
-                {
-                    string data = tablica[i, 2];
-                    DateTime znowudata = DateTime.Parse(data);
-                    int ktory = znowudata.Day;
-                    lstMiesiac.Items[ktory-1].SubItems[2].Text = tablica[i, 3];
-                    lstMiesiac.Items[ktory-1].SubItems[3].Text = tablica[i, 4];
-                    if(tablica[i, 3]!="")
-                    {
-                        ileWag++;
-                    }
-                }
-                
+                lblOpisDystans.Visible = true;
+                lblOpisWaga.Visible = true;
+                lblDystansDzien.Visible = true;
+                lblWagaDzien.Visible = true;
+                lblDystansDzien.Text = lstMiesiac.Items[0].SubItems[3].Text;
+                lblWagaDzien.Text = lstMiesiac.Items[0].SubItems[2].Text;
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }*/
         }
 
-    
         private void button1_Click(object sender, EventArgs e)
         {
 
@@ -167,17 +151,22 @@ namespace RTL
 
         }
 
+
+
         private void LstMiesiac_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             lblDzienzTabeli.Text = lstMiesiac.SelectedItems[0].SubItems[0].Text + " " + lstMiesiac.SelectedItems[0].SubItems[1].Text;
 
-                lblOpisDystans.Visible = true;
-                lblOpisWaga.Visible = true;
-                txtDystansDzien.Visible = true;
-                txtWagaDzien.Visible = true;
-                txtDystansDzien.Enabled = true;
-                txtWagaDzien.Enabled = true;
-                btnZapiszDystans.Visible = true;
+            tabBiegi.SelectedIndex = 0;
+            lblDystansDzien.Visible = false;
+            lblWagaDzien.Visible = false;
+            lblOpisDystans.Visible = true;
+            lblOpisWaga.Visible = true;
+            txtDystansDzien.Visible = true;
+            txtWagaDzien.Visible = true;
+            txtDystansDzien.Enabled = true;
+            txtWagaDzien.Enabled = true;
+            btnZapiszDystans.Visible = true;
 
             if (lstMiesiac.SelectedItems[0].SubItems[3].Text != "")
             {
@@ -188,12 +177,14 @@ namespace RTL
             {
                 txtDystansDzien.Text = "";
                 txtWagaDzien.Text = "";
+                BazaLacze.InsertWaga(lstMiesiac.SelectedItems[0].SubItems[0].Text);
+                BazaLacze.InsertDystans(lstMiesiac.SelectedItems[0].SubItems[0].Text);
             }
 
-            txtDystansDzien.KeyPress += new KeyPressEventHandler(keypressed);
-            txtWagaDzien.KeyPress += new KeyPressEventHandler(keypressed);
+                txtDystansDzien.KeyPress += new KeyPressEventHandler(keypressed);
+                txtWagaDzien.KeyPress += new KeyPressEventHandler(keypressed);
 
-        }
+         }
 
         // Moje obliczenia i inne
 
@@ -277,8 +268,15 @@ namespace RTL
 
         private void pnlWeightPlot_Paint(object sender, PaintEventArgs e)
         {
+
+            wyswietl_BilansWaga(miesicNr[comMiesiac.SelectedIndex], dateTimePickerYear.Text);
+            ileWag = BazaLacze.WagaLicznikRekordow(miesicNr[comMiesiac.SelectedIndex], dateTimePickerYear.Text);
+            button1.Text = ileWag.ToString();
+
+
             int [] d = new int[ileWag];
             double[] w = new double[ileWag];
+            string[] x = new string[ileWag];
             double wmax,wsuma,wsrednia;
             int intervals;
             double gridSpacing, wLegend;
@@ -302,12 +300,13 @@ namespace RTL
 
 
             int licz = 0;
-            for (int i=1;i<lstMiesiac.Items.Count;i++)
+            for (int i=0;i<lstMiesiac.Items.Count;i++)
             {
                 if(lstMiesiac.Items[i].SubItems[2].Text!="")
                 {
                     //TimeSpan diff = DateTime.Parse(lstMiesiac.Items[i].SubItems[0].Text) - DateTime.Parse(lstMiesiac.Items[0].SubItems[0].Text);
                     d[licz] = licz;
+                    x[licz] = lstMiesiac.Items[i].SubItems[0].Text;
                     w[licz] = Convert.ToDouble(lstMiesiac.Items[i].SubItems[2].Text);
                     wmin = Math.Min(w[licz], wmin);
                     wmax = Math.Max(w[licz], wmax);
@@ -344,10 +343,12 @@ namespace RTL
 
             weightPlot.Clear(plnWeightPlot.BackColor);
 
-            for (int i = 1; i < ileWag; i++)
+            int cos = ileWag;
+            for (int i = 0; i < cos-1; i++)
             {
                 // connect current point to previous point
-                weightPlot.DrawLine(myPen, DToX(d[i - 1], d[ileWag - 1]), WToY(w[i - 1], wmin, wmax), DToX(d[i], d[ileWag - 1]), WToY(w[i], wmin, wmax));
+                //weightPlot.DrawLine(myPen, DToX(d[i - 1], d[ileWag - 1]), WToY(w[i - 1], wmin, wmax), DToX(d[i], d[ileWag - 1]), WToY(w[i], wmin, wmax));
+                weightPlot.DrawLine(myPen, DToX(d[i], d[ileWag - 1]), WToY(w[i], wmin, wmax), DToX(d[i+1], d[ileWag - 1]), WToY(w[i+1], wmin, wmax));
             }
 
             legendArea = pnlWeight.CreateGraphics();
@@ -358,7 +359,8 @@ namespace RTL
             s = "Start: " + String.Format("{0:MMMM d, yyyy}", lstMiesiac.Items[pozycja_first].SubItems[0].Text);
             legendArea.DrawString(s, legendFont, Brushes.Black, plnWeightPlot.Left + 10, plnWeightPlot.Top + plnWeightPlot.Height + 10);
             legendArea.DrawLine(Pens.Black, plnWeightPlot.Left + 10, plnWeightPlot.Top + plnWeightPlot.Height + 10, plnWeightPlot.Left, plnWeightPlot.Top + plnWeightPlot.Height);
-            s = "End: " + String.Format("{0:MMMM d, yyyy}", lstMiesiac.Items[pozycja_last].SubItems[0].Text);
+            //s = "End: " + String.Format("{0:MMMM d, yyyy}", lstMiesiac.Items[pozycja_last].SubItems[0].Text);
+            s = "End: " + String.Format("{0:MMMM d, yyyy}",x[ileWag-1]);
             sSize = legendArea.MeasureString(s, legendFont);
             legendArea.DrawString(s, legendFont, Brushes.Black, plnWeightPlot.Left + plnWeightPlot.Width - sSize.Width - 10, plnWeightPlot.Top + plnWeightPlot.Height + 10);
             legendArea.DrawLine(Pens.Black, plnWeightPlot.Left + plnWeightPlot.Width - 10, plnWeightPlot.Top + plnWeightPlot.Height + 10, plnWeightPlot.Left + DToX(d[ileWag - 1], d[ileWag - 1]), plnWeightPlot.Top + plnWeightPlot.Height);
@@ -412,20 +414,21 @@ namespace RTL
             {
                 lblOpisDystans.Visible = true;
                 lblOpisWaga.Visible = true;
-                txtDystansDzien.Visible = true;
-                txtWagaDzien.Visible = true;
-                txtDystansDzien.Text = lstMiesiac.SelectedItems[0].SubItems[3].Text;
-                txtWagaDzien.Text = lstMiesiac.SelectedItems[0].SubItems[2].Text;
+                lblDystansDzien.Visible = true;
+                lblWagaDzien.Visible = true;
+                lblDystansDzien.Text = lstMiesiac.SelectedItems[0].SubItems[3].Text;
+                lblWagaDzien.Text = lstMiesiac.SelectedItems[0].SubItems[2].Text;
             }
             else
             {
+                lblDystansDzien.Visible = false;
+                lblWagaDzien.Visible = false;
                 lblOpisDystans.Visible = false;
                 lblOpisWaga.Visible = false;
                 txtDystansDzien.Visible = false;
                 txtWagaDzien.Visible = false;
             }
 
-             //MessageBox.Show(productName + " , " + price + " , " + quantity);
         }
 
         private void keypressed(Object o, KeyPressEventArgs e)
@@ -472,20 +475,77 @@ namespace RTL
 
             double num = double.Parse(zapiszDystans);
             lstMiesiac.SelectedItems[0].SubItems[3].Text = String.Format("{0:0.00}", num);
+            lblDystansDzien.Text = String.Format("{0:0.00}", num);
             num = double.Parse(zapiszWaga);
             lstMiesiac.SelectedItems[0].SubItems[2].Text = String.Format("{0:0.00}", num);
-
+            lblWagaDzien.Text = String.Format("{0:0.00}", num);
 
             ileWag++;
 
             btnZapiszDystans.Visible = false;
             txtDystansDzien.Enabled = false;
             txtWagaDzien.Enabled = false;
+            txtDystansDzien.Visible = false;
+            txtWagaDzien.Visible = false;
+            lblDystansDzien.Visible = true;
+            lblWagaDzien.Visible = true;
 
             double jakaWaga;
+            double jakiDystans;
 
             jakaWaga = Convert.ToDouble(lstMiesiac.SelectedItems[0].SubItems[2].Text);
+            jakiDystans=Convert.ToDouble(lstMiesiac.SelectedItems[0].SubItems[3].Text);
+
+            BazaLacze.UpdateWaga(lstMiesiac.SelectedItems[0].SubItems[0].Text, jakaWaga);
+            BazaLacze.UpdateDystans(lstMiesiac.SelectedItems[0].SubItems[0].Text, jakiDystans);
+
+            wyswietl_lblDystansCalkowity(miesicNr[comMiesiac.SelectedIndex], dateTimePickerYear.Text);
+
 
         }
+
+        private void ComMiesiac_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            comMiesiac.Text = comMiesiac.SelectedItem.ToString();
+            lblMiesiacRok.Text = comMiesiac.Text + " " + dateTimePickerYear.Text + " r.";
+            tabBiegi.SelectedIndex = 0;
+            wyswietl_lstMiesiac(comMiesiac.SelectedIndex+1, dateTimePickerYear.Value.Year);
+            wyswietl_lblDystansCalkowity(miesicNr[comMiesiac.SelectedIndex], dateTimePickerYear.Text);
+            
+        }
+
+        private void DateTimePickerYear_ValueChanged(object sender, EventArgs e)
+        {
+            lblMiesiacRok.Text = comMiesiac.Text + " " + dateTimePickerYear.Text + " r.";
+            wyswietl_lstMiesiac(comMiesiac.SelectedIndex + 1, dateTimePickerYear.Value.Year);
+            lblMiesiacRok.Text = comMiesiac.Text + " " + dateTimePickerYear.Text + " r.";
+            tabBiegi.SelectedIndex = 0;
+            wyswietl_lblDystansCalkowity(miesicNr[comMiesiac.SelectedIndex], dateTimePickerYear.Text);
+        }
+
+        private void TxtDystansDzien_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void wyswietl_lblDystansCalkowity(string mie,string ro)
+        {
+            lblDystansCalkowity.Text = "Dystans przebiegnięty od 12.11.2011 roku: "+ String.Format("{0:0.00}", BazaLacze.DystansCalkowity("__", "____")) + " km";
+            lblCalkowityNaRok.Text = "Dystans przebiegnięty w "+ro+" roku: " + String.Format("{0:0.00}", BazaLacze.DystansCalkowity("__",ro)) + " km";
+            lblDystansMiesiac.Text = String.Format("{0:0.00}", BazaLacze.DystansCalkowity(mie, ro)) + " km";
+            lblSredniaMiesiac.Text=String.Format("{0:0.00}", BazaLacze.Srednia(mie, ro))+" km";
+
+        }
+
+        private void wyswietl_BilansWaga(string mie,string ro)
+        {
+            lblWagaRokMax.Text= String.Format("{0:0.00}", BazaLacze.WagaMax("__", ro));
+            lblWagaRokMax.Text=String.Format("{0:0.00}", BazaLacze.WagaMinimum("__", ro));
+            lblWagaRokSrednia.Text=String.Format("{0:0.00}", BazaLacze.WagaSrednia("__", ro));
+            //lblWagaMiesiacMax.Text=String.Format("{0:0.00}", BazaLacze.WagaMax(mie, ro));
+            //lblWagaMiesiacMin.Text=String.Format("{0:0.00}", BazaLacze.WagaMinimum(mie, ro));
+            //lblWagaMiesiacSrednia.Text=String.Format("{0:0.00}", BazaLacze.WagaSrednia(mie, ro));
+        }
+
     }
 }

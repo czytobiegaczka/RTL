@@ -106,9 +106,10 @@ namespace RTL
             }
         }
 
-        public int LicznikRekordow()
+        public int LicznikRekordow(string mie,string ro)
         {
-            string query = "SELECT COUNT(*) FROM sql7302398.miesiac";
+            string like = "'___" + mie + "." + ro + "'";
+            string query = "SELECT COUNT(*) FROM sql7302398.miesiac WHERE data like " + like;
             int suma = 0;
 
             //Open connection
@@ -125,12 +126,36 @@ namespace RTL
             return suma;
         }
 
-        public string[,] PobierzMiesiac(int wiersze,int kolumny)
-        {
-            string query = "SELECT miesiac.data as data, miesiac.dzien as dzien,waga.waga as waga FROM miesiac LEFT JOIN waga on miesiac.waga_Id=waga.waga_Id";
-            string[,] tablica = new string[wiersze+1,kolumny+1];
 
-             //Open connection
+        public int WagaLicznikRekordow(string mie, string ro)
+        {
+            string like = "'___" + mie + "." + ro + "'";
+            string query = "SELECT COUNT(*) FROM sql7302398.waga LEFT JOIN miesiac on miesiac.miesiac_Id=waga.miesiac_id  WHERE miesiac.data like " + like;
+            int suma = 0;
+
+            //Open connection
+            if (this.OpenConnection() == true)
+            {
+                //Create Command
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+
+                //Create a data reader and Execute the command
+                suma = int.Parse(cmd.ExecuteScalar().ToString());
+
+            }
+            this.CloseConnection();
+            return suma;
+        }
+
+        public string[,] PobierzMiesiac(int wiersze,int kolumny,string mie, string ro )
+        {
+
+            string like = "'___" + mie + "." + ro + "'";
+            string query = "SELECT miesiac.data as data, miesiac.dzien as dzien,waga.waga as waga, trening.dystans as dystans FROM miesiac LEFT JOIN waga on miesiac.miesiac_Id=waga.miesiac_id LEFT JOIN trening on miesiac.miesiac_Id = trening.miesiac_id WHERE miesiac.data like " + like ;
+            //
+            string[,] tablica = new string[wiersze, kolumny];
+
+            //Open connection
             if (this.OpenConnection() == true)
             {
  
@@ -188,7 +213,7 @@ namespace RTL
                     //create command and assign the query and connection from the constructor
                     cmd.CommandText = "INSERT INTO miesiac (data,dzien) VALUES(@wpiszData,@wpiszDzien)";
                     cmd.Prepare();
-
+                    
                     DateTime dt = new DateTime(jakirok, jakimie, licz);
                     liczdata = dt.ToShortDateString();
                     liczdzien = dt.ToString("dddd");
@@ -204,24 +229,96 @@ namespace RTL
                 this.CloseConnection();
             }
         }
-        
 
-        //Update statement
-        public void Update()
+        public void InsertWaga(string dat)
         {
-            string query = "UPDATE tableinfo SET name='Joe', age='22' WHERE name='John Smith'";
+            string ciag;
+            ciag = "";
 
-            //Open connection
+            //open connection
             if (this.OpenConnection() == true)
             {
-                //create mysql command
-                MySqlCommand cmd = new MySqlCommand();
-                //Assign the query using CommandText
-                cmd.CommandText = query;
-                //Assign the connection using Connection
-                cmd.Connection = connection;
 
-                //Execute query
+                MySqlCommand cmd = new MySqlCommand(ciag, connection);
+                //ciag = ;
+                //create command and assign the query and connection from the constructor
+                cmd.CommandText = "INSERT INTO waga (miesiac_id) SELECT miesiac.miesiac_Id FROM miesiac LEFT JOIN waga ON waga.miesiac_id=miesiac.miesiac_Id WHERE miesiac.data=@jakaData";
+                cmd.Prepare();
+
+                cmd.Parameters.AddWithValue("@jakaData", dat);
+                cmd.ExecuteNonQuery();
+
+                //close connection
+                this.CloseConnection();
+            }
+        }
+
+        public void InsertDystans(string dat)
+        {
+            string ciag;
+            ciag = "";
+
+            //open connection
+            if (this.OpenConnection() == true)
+            {
+
+                MySqlCommand cmd = new MySqlCommand(ciag, connection);
+                //ciag = ;
+                //create command and assign the query and connection from the constructor
+                cmd.CommandText = "INSERT INTO trening (miesiac_id) SELECT miesiac.miesiac_Id FROM miesiac LEFT JOIN trening ON trening.miesiac_id=miesiac.miesiac_Id WHERE miesiac.data=@jakaData";
+                cmd.Prepare();
+
+                cmd.Parameters.AddWithValue("@jakaData", dat);
+                cmd.ExecuteNonQuery();
+
+                //close connection
+                this.CloseConnection();
+            }
+        }
+
+        //Update statement
+
+        public void UpdateWaga(string dat,double wag)
+        {
+            string ciag;
+            ciag = "";
+
+            if (this.OpenConnection() == true)
+            {
+
+                MySqlCommand cmd = new MySqlCommand(ciag, connection);
+                //ciag = ;
+                //create command and assign the query and connection from the constructor
+                cmd.CommandText = "UPDATE waga LEFT JOIN miesiac on waga.miesiac_id=miesiac.miesiac_Id SET waga.waga=@jakaWaga WHERE miesiac.data=@jakaData";
+                cmd.Prepare();
+
+                cmd.Parameters.AddWithValue("@jakaData", dat);
+                cmd.Parameters.AddWithValue("@jakaWaga", wag);
+
+                cmd.ExecuteNonQuery();
+
+                //close connection
+                this.CloseConnection();
+            }
+        }
+
+        public void UpdateDystans(string dat, double dys)
+        {
+            string ciag;
+            ciag = "";
+
+            if (this.OpenConnection() == true)
+            {
+
+                MySqlCommand cmd = new MySqlCommand(ciag, connection);
+                //ciag = ;
+                //create command and assign the query and connection from the constructor
+                cmd.CommandText = "UPDATE trening LEFT JOIN miesiac on trening.miesiac_id=miesiac.miesiac_Id SET trening.dystans=@jakiDystans WHERE miesiac.data=@jakaData";
+                cmd.Prepare();
+
+                cmd.Parameters.AddWithValue("@jakaData", dat);
+                cmd.Parameters.AddWithValue("@jakiDystans", dys);
+
                 cmd.ExecuteNonQuery();
 
                 //close connection
@@ -285,10 +382,12 @@ namespace RTL
         }
 
         //Count statement
-        public int Count()
+        public double DystansCalkowity(string mies,string ro)
         {
-            string query = "SELECT Count(*) FROM tableinfo";
-            int Count = -1;
+
+            string like = "'___"+mies+"_"+ ro + "'";
+            string query = "SELECT SUM(dystans) FROM trening LEFT JOIN miesiac ON miesiac.miesiac_id=trening.miesiac_id WHERE miesiac.data LIKE "+like;
+            double Count = 0;
 
             //Open Connection
             if (this.OpenConnection() == true)
@@ -297,7 +396,42 @@ namespace RTL
                 MySqlCommand cmd = new MySqlCommand(query, connection);
 
                 //ExecuteScalar will return one value
-                Count = int.Parse(cmd.ExecuteScalar() + "");
+                if (cmd.ExecuteScalar()!=DBNull.Value)
+                {
+                    Count = double.Parse(cmd.ExecuteScalar() + "");
+                }
+ 
+                //close Connection
+                this.CloseConnection();
+
+                return Count;
+            }
+            else
+            {
+                return Count;
+            }
+
+
+        }
+
+        public double Srednia(string mies, string ro)
+        {
+
+            string like = "'___" + mies + "_" + ro + "'";
+            string query = "SELECT AVG(dystans) FROM trening LEFT JOIN miesiac ON miesiac.miesiac_id=trening.miesiac_id WHERE miesiac.data LIKE " + like;
+            double Count = 0;
+
+            //Open Connection
+            if (this.OpenConnection() == true)
+            {
+                //Create Mysql Command
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+
+                //ExecuteScalar will return one value
+                if (cmd.ExecuteScalar() != DBNull.Value)
+                {
+                    Count = double.Parse(cmd.ExecuteScalar() + "");
+                }
 
                 //close Connection
                 this.CloseConnection();
@@ -309,5 +443,96 @@ namespace RTL
                 return Count;
             }
         }
+
+        public double WagaMinimum(string mies, string ro)
+        {
+
+            string like = "'___" + mies + "_" + ro + "'";
+            string query = "SELECT MIN(waga) FROM waga LEFT JOIN miesiac ON miesiac.miesiac_id=waga.miesiac_id WHERE miesiac.data LIKE " + like;
+            double Count = 0;
+
+            //Open Connection
+            if (this.OpenConnection() == true)
+            {
+                //Create Mysql Command
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+
+                //ExecuteScalar will return one value
+                if (cmd.ExecuteScalar() != DBNull.Value)
+                {
+                    Count = double.Parse(cmd.ExecuteScalar() + "");
+                }
+
+                //close Connection
+                this.CloseConnection();
+
+                return Count;
+            }
+            else
+            {
+                return Count;
+            }
+        }
+
+        public double WagaMax(string mies, string ro)
+        {
+
+            string like = "'___" + mies + "_" + ro + "'";
+            string query = "SELECT MAX(waga) FROM waga LEFT JOIN miesiac ON miesiac.miesiac_id=waga.miesiac_id WHERE miesiac.data LIKE " + like;
+            double Count = 0;
+
+            //Open Connection
+            if (this.OpenConnection() == true)
+            {
+                //Create Mysql Command
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+
+                //ExecuteScalar will return one value
+                if (cmd.ExecuteScalar() != DBNull.Value)
+                {
+                    Count = double.Parse(cmd.ExecuteScalar() + "");
+                }
+
+                //close Connection
+                this.CloseConnection();
+
+                return Count;
+            }
+            else
+            {
+                return Count;
+            }
+        }
+
+        public double WagaSrednia(string mies, string ro)
+        {
+
+            string like = "'___" + mies + "_" + ro + "'";
+            string query = "SELECT MAX(waga) FROM waga LEFT JOIN miesiac ON miesiac.miesiac_id=waga.miesiac_id WHERE miesiac.data LIKE " + like;
+            double Count = 0;
+
+            //Open Connection
+            if (this.OpenConnection() == true)
+            {
+                //Create Mysql Command
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+
+                //ExecuteScalar will return one value
+                if (cmd.ExecuteScalar() != DBNull.Value)
+                {
+                    Count = double.Parse(cmd.ExecuteScalar() + "");
+                }
+
+                //close Connection
+                this.CloseConnection();
+
+                return Count;
+            }
+            else
+            {
+                return Count;
+            }
+        }
+
     }
 }
