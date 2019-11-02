@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using System.Globalization;
+
 
 
 
@@ -19,12 +21,14 @@ namespace RTL
         public double wmin;
         public string[] miesicNr = { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12" };
         private DBConnect BazaLacze; //łącze do bazy danych MySQL
+        public string czyZmianaWaga;
+        public string czyZmianaDystans;
 
      
 
         public frmRTL()
         {
-            
+            //zmiany 01.11.2019
             BazaLacze = new DBConnect();
             InitializeComponent();
         }
@@ -158,6 +162,7 @@ namespace RTL
             lblDzienzTabeli.Text = lstMiesiac.SelectedItems[0].SubItems[0].Text + " " + lstMiesiac.SelectedItems[0].SubItems[1].Text;
 
             tabBiegi.SelectedIndex = 0;
+            pnlZmianaDystanWaga.BackColor=Color.Honeydew;
             lblDystansDzien.Visible = false;
             lblWagaDzien.Visible = false;
             lblOpisDystans.Visible = true;
@@ -167,24 +172,23 @@ namespace RTL
             txtDystansDzien.Enabled = true;
             txtWagaDzien.Enabled = true;
             btnZapiszDystans.Visible = true;
+            btnAnulujDystans.Visible = true;
+            pnlRokMiesiac.Enabled = false;
+            pnlCalkowity.Enabled = false;
+            plnButtons.Enabled = false;
+            lstMiesiac.Enabled = false;
 
-            if (lstMiesiac.SelectedItems[0].SubItems[3].Text != "")
-            {
-                txtDystansDzien.Text = lstMiesiac.SelectedItems[0].SubItems[3].Text;
-                txtWagaDzien.Text = lstMiesiac.SelectedItems[0].SubItems[2].Text;
-            }
-            else
-            {
-                txtDystansDzien.Text = "";
-                txtWagaDzien.Text = "";
-                BazaLacze.InsertWaga(lstMiesiac.SelectedItems[0].SubItems[0].Text);
-                BazaLacze.InsertDystans(lstMiesiac.SelectedItems[0].SubItems[0].Text);
-            }
 
-                txtDystansDzien.KeyPress += new KeyPressEventHandler(keypressed);
-                txtWagaDzien.KeyPress += new KeyPressEventHandler(keypressed);
+            czyZmianaWaga = lstMiesiac.SelectedItems[0].SubItems[2].Text;
+            czyZmianaDystans = lstMiesiac.SelectedItems[0].SubItems[3].Text;
 
-         }
+            txtDystansDzien.Text = czyZmianaDystans;
+            txtWagaDzien.Text = czyZmianaWaga;
+
+            txtDystansDzien.KeyPress += new KeyPressEventHandler(keypressed);
+            txtWagaDzien.KeyPress += new KeyPressEventHandler(keypressed);
+
+        }
 
         // Moje obliczenia i inne
 
@@ -410,10 +414,10 @@ namespace RTL
 
             lblDzienzTabeli.Text = lstMiesiac.SelectedItems[0].SubItems[0].Text + " " + lstMiesiac.SelectedItems[0].SubItems[1].Text;
 
-            if (lstMiesiac.SelectedItems[0].SubItems[3].Text != "")
+            if (lstMiesiac.SelectedItems[0].SubItems[2].Text != "" |  lstMiesiac.SelectedItems[0].SubItems[3].Text != "")
             {
-                lblOpisDystans.Visible = true;
-                lblOpisWaga.Visible = true;
+                if (lstMiesiac.SelectedItems[0].SubItems[2].Text != "") lblOpisDystans.Visible = true;
+                if (lstMiesiac.SelectedItems[0].SubItems[3].Text != "") lblOpisWaga.Visible = true;
                 lblDystansDzien.Visible = true;
                 lblWagaDzien.Visible = true;
                 lblDystansDzien.Text = lstMiesiac.SelectedItems[0].SubItems[3].Text;
@@ -468,21 +472,139 @@ namespace RTL
             string zapiszDate;
             string zapiszDystans;
             string zapiszWaga;
+            double num;
 
             zapiszDate= lstMiesiac.SelectedItems[0].SubItems[1].Text;
             zapiszDystans = txtDystansDzien.Text;
             zapiszWaga = txtWagaDzien.Text;
 
-            double num = double.Parse(zapiszDystans);
-            lstMiesiac.SelectedItems[0].SubItems[3].Text = String.Format("{0:0.00}", num);
-            lblDystansDzien.Text = String.Format("{0:0.00}", num);
-            num = double.Parse(zapiszWaga);
-            lstMiesiac.SelectedItems[0].SubItems[2].Text = String.Format("{0:0.00}", num);
-            lblWagaDzien.Text = String.Format("{0:0.00}", num);
+            // edycja dystansu
+            // zmiana wpisanego 0 na puste
+            if (zapiszDystans == "0") zapiszDystans = "";
 
+
+            if (czyZmianaDystans == "")
+            {
+                if (czyZmianaDystans == zapiszDystans)
+                {
+                    // było puste - jest puste
+                    lblDystansDzien.Text = "";
+                }
+                else
+                {
+                    // było puste - jest wartość
+
+                    BazaLacze.InsertDystans(lstMiesiac.SelectedItems[0].SubItems[0].Text);
+
+                    num = double.Parse(zapiszDystans);
+                    lstMiesiac.SelectedItems[0].SubItems[3].Text = String.Format("{0:0.00}", num);
+                    lblDystansDzien.Text = String.Format("{0:0.00}", num);
+
+                    double jakiDystans;
+
+                    jakiDystans = Convert.ToDouble(lstMiesiac.SelectedItems[0].SubItems[3].Text);
+                    BazaLacze.UpdateDystans(lstMiesiac.SelectedItems[0].SubItems[0].Text, jakiDystans);
+
+                    wyswietl_lblDystansCalkowity(miesicNr[comMiesiac.SelectedIndex], dateTimePickerYear.Text);
+                }
+            }
+            else if (zapiszDystans == czyZmianaDystans)
+            {
+                //była wartość - jest ta sama wartość
+                lblDystansDzien.Text = "";
+            }
+            else
+            {
+                if (zapiszDystans == "")
+                {
+                    //była wartość - jest puste
+                    BazaLacze.DeleteDystans(lstMiesiac.SelectedItems[0].SubItems[0].Text);
+                    lstMiesiac.SelectedItems[0].SubItems[3].Text = "";
+                    lblWagaDzien.Text = "";
+                    wyswietl_lblDystansCalkowity(miesicNr[comMiesiac.SelectedIndex], dateTimePickerYear.Text);
+                }
+                else
+                {
+                    //była wartość jest inna wartość
+
+                    num = double.Parse(zapiszDystans);
+                    lstMiesiac.SelectedItems[0].SubItems[3].Text = String.Format("{0:0.00}", num);
+                    lblDystansDzien.Text = String.Format("{0:0.00}", num);
+
+                    double jakiDystans;
+
+                    jakiDystans = Convert.ToDouble(lstMiesiac.SelectedItems[0].SubItems[3].Text);
+                    BazaLacze.UpdateDystans(lstMiesiac.SelectedItems[0].SubItems[0].Text, jakiDystans);
+
+                    wyswietl_lblDystansCalkowity(miesicNr[comMiesiac.SelectedIndex], dateTimePickerYear.Text);
+                }
+            }
+
+
+            // edycja wagi
+            // zmiana wpisanego 0 na puste
+            if (zapiszWaga == "0") zapiszWaga = "";
+
+
+            if (czyZmianaWaga=="")
+            {
+                if (czyZmianaWaga==zapiszWaga)
+                {
+                    // było puste - jest puste
+                    lblWagaDzien.Text = "";
+                }
+                else
+                {
+                    // było puste - jest wartość
+
+
+                    BazaLacze.InsertWaga(lstMiesiac.SelectedItems[0].SubItems[0].Text);
+
+                    num = double.Parse(zapiszWaga);
+                    lstMiesiac.SelectedItems[0].SubItems[2].Text = String.Format("{0:0.00}", num);
+                    lblWagaDzien.Text = String.Format("{0:0.00}", num);
+
+                    double jakaWaga;
+                    jakaWaga = Convert.ToDouble(lstMiesiac.SelectedItems[0].SubItems[2].Text);
+                    BazaLacze.UpdateWaga(lstMiesiac.SelectedItems[0].SubItems[0].Text, jakaWaga);
+                }
+            }
+            else if(zapiszWaga==czyZmianaWaga)
+            {
+                //była wartość - jest ta sama wartość
+                lblWagaDzien.Text = "";
+            }
+            else
+            {
+                if(zapiszWaga=="")
+                {
+                    //była wartość - jest puste
+                    BazaLacze.DeleteWaga(lstMiesiac.SelectedItems[0].SubItems[0].Text);
+                    lstMiesiac.SelectedItems[0].SubItems[2].Text = "";
+                    lblWagaDzien.Text = "";
+
+                }
+                else
+                {
+                    //była wartość jest inna wartość
+
+                    num = double.Parse(zapiszWaga);
+                    lstMiesiac.SelectedItems[0].SubItems[2].Text = String.Format("{0:0.00}", num);
+                    lblWagaDzien.Text = String.Format("{0:0.00}", num);
+
+                    double jakaWaga;
+                    jakaWaga = Convert.ToDouble(lstMiesiac.SelectedItems[0].SubItems[2].Text);
+                    BazaLacze.UpdateWaga(lstMiesiac.SelectedItems[0].SubItems[0].Text, jakaWaga);
+                }
+            }
+
+            /*
             ileWag++;
+            */
 
+            pnlZmianaDystanWaga.BackColor = Color.White;
             btnZapiszDystans.Visible = false;
+            btnAnulujDystans.Visible = false;
             txtDystansDzien.Enabled = false;
             txtWagaDzien.Enabled = false;
             txtDystansDzien.Visible = false;
@@ -490,18 +612,49 @@ namespace RTL
             lblDystansDzien.Visible = true;
             lblWagaDzien.Visible = true;
 
-            double jakaWaga;
-            double jakiDystans;
+            pnlRokMiesiac.Enabled = true;
+            pnlCalkowity.Enabled = true;
+            plnButtons.Enabled = true;
+            lstMiesiac.Enabled = true;
 
-            jakaWaga = Convert.ToDouble(lstMiesiac.SelectedItems[0].SubItems[2].Text);
-            jakiDystans=Convert.ToDouble(lstMiesiac.SelectedItems[0].SubItems[3].Text);
+        }
 
-            BazaLacze.UpdateWaga(lstMiesiac.SelectedItems[0].SubItems[0].Text, jakaWaga);
-            BazaLacze.UpdateDystans(lstMiesiac.SelectedItems[0].SubItems[0].Text, jakiDystans);
+        private void BtnAnulujDystans_Click(object sender, EventArgs e)
+        {
+            pnlZmianaDystanWaga.BackColor = Color.White;
+            btnZapiszDystans.Visible = false;
+            btnAnulujDystans.Visible = false;
+            txtDystansDzien.Enabled = false;
+            txtWagaDzien.Enabled = false;
+            txtDystansDzien.Visible = false;
+            txtWagaDzien.Visible = false;
 
-            wyswietl_lblDystansCalkowity(miesicNr[comMiesiac.SelectedIndex], dateTimePickerYear.Text);
 
+            pnlRokMiesiac.Enabled = true;
+            pnlCalkowity.Enabled = true;
+            plnButtons.Enabled = true;
+            lstMiesiac.Enabled = true;
 
+            lblDzienzTabeli.Text = lstMiesiac.SelectedItems[0].SubItems[0].Text + " " + lstMiesiac.SelectedItems[0].SubItems[1].Text;
+
+            if (lstMiesiac.SelectedItems[0].SubItems[2].Text != "" ^ lstMiesiac.SelectedItems[0].SubItems[3].Text != "")
+            {
+                lblOpisDystans.Visible = true;
+                lblOpisWaga.Visible = true;
+                lblDystansDzien.Visible = true;
+                lblWagaDzien.Visible = true;
+                lblDystansDzien.Text = lstMiesiac.SelectedItems[0].SubItems[3].Text;
+                lblWagaDzien.Text = lstMiesiac.SelectedItems[0].SubItems[2].Text;
+            }
+            else
+            {
+                lblDystansDzien.Visible = false;
+                lblWagaDzien.Visible = false;
+                lblOpisDystans.Visible = false;
+                lblOpisWaga.Visible = false;
+                txtDystansDzien.Visible = false;
+                txtWagaDzien.Visible = false;
+            }
         }
 
         private void ComMiesiac_SelectedIndexChanged(object sender, EventArgs e)
@@ -540,12 +693,45 @@ namespace RTL
         private void wyswietl_BilansWaga(string mie,string ro)
         {
             lblWagaRokMax.Text= String.Format("{0:0.00}", BazaLacze.WagaMax("__", ro));
-            lblWagaRokMax.Text=String.Format("{0:0.00}", BazaLacze.WagaMinimum("__", ro));
+            lblWagaRokMin.Text=String.Format("{0:0.00}", BazaLacze.WagaMinimum("__", ro));
             lblWagaRokSrednia.Text=String.Format("{0:0.00}", BazaLacze.WagaSrednia("__", ro));
             //lblWagaMiesiacMax.Text=String.Format("{0:0.00}", BazaLacze.WagaMax(mie, ro));
             //lblWagaMiesiacMin.Text=String.Format("{0:0.00}", BazaLacze.WagaMinimum(mie, ro));
             //lblWagaMiesiacSrednia.Text=String.Format("{0:0.00}", BazaLacze.WagaSrednia(mie, ro));
         }
+
+        private void LstMiesiac_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BtnTest_Click(object sender, EventArgs e)
+        {
+            string data;
+            DateTime data1;
+            int licznikWierszy = 100;
+            int licznikKolumn = 4;
+            string[,] tabela = new string[licznikWierszy, licznikKolumn];
+
+            tabela = BazaLacze.ZmianaFormatu(licznikWierszy, licznikKolumn,"08","2019");
+
+            for (int i = 0; i < licznikWierszy; i++)
+            {
+                data = tabela[i, 1];
+                data1 = DateTime.Parse(data);
+                data = data1.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"));
+                //tabela[i, 1] = data;
+                button1.Text = i.ToString();
+                button2.Text = data;
+                BazaLacze.UpdateHistoria(data, i + 1);
+            }
+        }
+
+        private void TextBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
 
     }
 }

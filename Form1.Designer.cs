@@ -39,10 +39,11 @@
             this.lblMiesiacRok = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.panel5 = new System.Windows.Forms.Panel();
+            this.pnlZmianaDystanWaga = new System.Windows.Forms.Panel();
             this.lblDzienzTabeli = new System.Windows.Forms.Label();
             this.lblWagaDzien = new System.Windows.Forms.Label();
             this.lblDystansDzien = new System.Windows.Forms.Label();
+            this.btnAnulujDystans = new System.Windows.Forms.Button();
             this.btnZapiszDystans = new System.Windows.Forms.Button();
             this.lblOpisDystans = new System.Windows.Forms.Label();
             this.lblOpisUwagi = new System.Windows.Forms.Label();
@@ -58,8 +59,10 @@
             this.label22 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.lblWagaRokSrednia = new System.Windows.Forms.Label();
+            this.lblWagaRokMin = new System.Windows.Forms.Label();
             this.lblWagaRokMax = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label21 = new System.Windows.Forms.Label();
@@ -73,13 +76,9 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.plnWeightPlot = new System.Windows.Forms.Panel();
-            this.txtSredniaMiesiac = new System.Windows.Forms.TextBox();
-            this.txtdystansmiesiac = new System.Windows.Forms.TextBox();
-            this.panel3 = new System.Windows.Forms.Panel();
+            this.plnButtons = new System.Windows.Forms.Panel();
             this.btnWyjscie = new System.Windows.Forms.Button();
-            this.comRok = new System.Windows.Forms.ComboBox();
-            this.button6 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
+            this.btnTest = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -92,19 +91,17 @@
             this.pnlCalkowity = new System.Windows.Forms.Panel();
             this.lblCalkowityNaRok = new System.Windows.Forms.Label();
             this.lblDystansCalkowity = new System.Windows.Forms.Label();
-            this.lblWagaRokMin = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.pnlMiesiac.SuspendLayout();
             this.panel2.SuspendLayout();
             this.tabBiegi.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel6.SuspendLayout();
-            this.panel5.SuspendLayout();
+            this.pnlZmianaDystanWaga.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.pnlWeight.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.panel3.SuspendLayout();
+            this.plnButtons.SuspendLayout();
             this.pnlRokMiesiac.SuspendLayout();
             this.pnlCalkowity.SuspendLayout();
             this.SuspendLayout();
@@ -129,6 +126,7 @@
             this.lstMiesiac.Size = new System.Drawing.Size(505, 664);
             this.lstMiesiac.TabIndex = 1;
             this.lstMiesiac.UseCompatibleStateImageBehavior = false;
+            this.lstMiesiac.SelectedIndexChanged += new System.EventHandler(this.LstMiesiac_SelectedIndexChanged);
             this.lstMiesiac.MouseClick += new System.Windows.Forms.MouseEventHandler(this.LstMiesiac_MouseClick);
             this.lstMiesiac.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.LstMiesiac_MouseDoubleClick);
             // 
@@ -156,7 +154,7 @@
             // 
             this.tabPage1.BackColor = System.Drawing.Color.White;
             this.tabPage1.Controls.Add(this.panel6);
-            this.tabPage1.Controls.Add(this.panel5);
+            this.tabPage1.Controls.Add(this.pnlZmianaDystanWaga);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -228,23 +226,25 @@
             this.label1.TabIndex = 2;
             this.label1.Text = "Łaczny dystans:";
             // 
-            // panel5
+            // pnlZmianaDystanWaga
             // 
-            this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel5.Controls.Add(this.lblDzienzTabeli);
-            this.panel5.Controls.Add(this.lblWagaDzien);
-            this.panel5.Controls.Add(this.lblDystansDzien);
-            this.panel5.Controls.Add(this.btnZapiszDystans);
-            this.panel5.Controls.Add(this.lblOpisDystans);
-            this.panel5.Controls.Add(this.lblOpisUwagi);
-            this.panel5.Controls.Add(this.lblOpisWaga);
-            this.panel5.Controls.Add(this.txtWagaDzien);
-            this.panel5.Controls.Add(this.txtDystansDzien);
-            this.panel5.Controls.Add(this.textBox2);
-            this.panel5.Location = new System.Drawing.Point(16, 243);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(626, 366);
-            this.panel5.TabIndex = 3;
+            this.pnlZmianaDystanWaga.BackColor = System.Drawing.Color.White;
+            this.pnlZmianaDystanWaga.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlZmianaDystanWaga.Controls.Add(this.lblDzienzTabeli);
+            this.pnlZmianaDystanWaga.Controls.Add(this.lblWagaDzien);
+            this.pnlZmianaDystanWaga.Controls.Add(this.lblDystansDzien);
+            this.pnlZmianaDystanWaga.Controls.Add(this.btnAnulujDystans);
+            this.pnlZmianaDystanWaga.Controls.Add(this.btnZapiszDystans);
+            this.pnlZmianaDystanWaga.Controls.Add(this.lblOpisDystans);
+            this.pnlZmianaDystanWaga.Controls.Add(this.lblOpisUwagi);
+            this.pnlZmianaDystanWaga.Controls.Add(this.lblOpisWaga);
+            this.pnlZmianaDystanWaga.Controls.Add(this.txtWagaDzien);
+            this.pnlZmianaDystanWaga.Controls.Add(this.txtDystansDzien);
+            this.pnlZmianaDystanWaga.Controls.Add(this.textBox2);
+            this.pnlZmianaDystanWaga.Location = new System.Drawing.Point(16, 243);
+            this.pnlZmianaDystanWaga.Name = "pnlZmianaDystanWaga";
+            this.pnlZmianaDystanWaga.Size = new System.Drawing.Size(626, 366);
+            this.pnlZmianaDystanWaga.TabIndex = 3;
             // 
             // lblDzienzTabeli
             // 
@@ -277,6 +277,17 @@
             this.lblDystansDzien.TabIndex = 4;
             this.lblDystansDzien.Text = "label2";
             this.lblDystansDzien.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // btnAnulujDystans
+            // 
+            this.btnAnulujDystans.Location = new System.Drawing.Point(278, 283);
+            this.btnAnulujDystans.Name = "btnAnulujDystans";
+            this.btnAnulujDystans.Size = new System.Drawing.Size(129, 58);
+            this.btnAnulujDystans.TabIndex = 0;
+            this.btnAnulujDystans.Text = "Anuluj";
+            this.btnAnulujDystans.UseVisualStyleBackColor = true;
+            this.btnAnulujDystans.Visible = false;
+            this.btnAnulujDystans.Click += new System.EventHandler(this.BtnAnulujDystans_Click);
             // 
             // btnZapiszDystans
             // 
@@ -361,6 +372,7 @@
             this.textBox2.TabIndex = 1;
             this.textBox2.Text = "10";
             this.textBox2.Visible = false;
+            this.textBox2.TextChanged += new System.EventHandler(this.TextBox2_TextChanged);
             // 
             // tabPage2
             // 
@@ -456,10 +468,20 @@
             this.lblWagaRokSrednia.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.lblWagaRokSrednia.Location = new System.Drawing.Point(152, 144);
             this.lblWagaRokSrednia.Name = "lblWagaRokSrednia";
-            this.lblWagaRokSrednia.Size = new System.Drawing.Size(48, 18);
+            this.lblWagaRokSrednia.Size = new System.Drawing.Size(0, 18);
             this.lblWagaRokSrednia.TabIndex = 1;
-            this.lblWagaRokSrednia.Text = "74.5";
             this.lblWagaRokSrednia.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lblWagaRokMin
+            // 
+            this.lblWagaRokMin.AutoSize = true;
+            this.lblWagaRokMin.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.lblWagaRokMin.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblWagaRokMin.Location = new System.Drawing.Point(152, 51);
+            this.lblWagaRokMin.Name = "lblWagaRokMin";
+            this.lblWagaRokMin.Size = new System.Drawing.Size(0, 18);
+            this.lblWagaRokMin.TabIndex = 1;
+            this.lblWagaRokMin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblWagaRokMax
             // 
@@ -468,9 +490,8 @@
             this.lblWagaRokMax.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.lblWagaRokMax.Location = new System.Drawing.Point(152, 97);
             this.lblWagaRokMax.Name = "lblWagaRokMax";
-            this.lblWagaRokMax.Size = new System.Drawing.Size(48, 18);
+            this.lblWagaRokMax.Size = new System.Drawing.Size(0, 18);
             this.lblWagaRokMax.TabIndex = 1;
-            this.lblWagaRokMax.Text = "73.1";
             this.lblWagaRokMax.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label10
@@ -483,6 +504,16 @@
             this.label10.TabIndex = 0;
             this.label10.Text = "maksymalna:";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Courier New", 12.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label2.Location = new System.Drawing.Point(11, 11);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(99, 20);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Waga rok:";
             // 
             // label9
             // 
@@ -636,48 +667,18 @@
             this.plnWeightPlot.TabIndex = 0;
             this.plnWeightPlot.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlWeightPlot_Paint);
             // 
-            // txtSredniaMiesiac
+            // plnButtons
             // 
-            this.txtSredniaMiesiac.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.txtSredniaMiesiac.Enabled = false;
-            this.txtSredniaMiesiac.Font = new System.Drawing.Font("Courier New", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.txtSredniaMiesiac.Location = new System.Drawing.Point(17, 621);
-            this.txtSredniaMiesiac.Name = "txtSredniaMiesiac";
-            this.txtSredniaMiesiac.Size = new System.Drawing.Size(81, 29);
-            this.txtSredniaMiesiac.TabIndex = 1;
-            this.txtSredniaMiesiac.Text = "25";
-            this.txtSredniaMiesiac.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtSredniaMiesiac.TextChanged += new System.EventHandler(this.Txtdystansmiesiac_TextChanged);
-            // 
-            // txtdystansmiesiac
-            // 
-            this.txtdystansmiesiac.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.txtdystansmiesiac.Enabled = false;
-            this.txtdystansmiesiac.Font = new System.Drawing.Font("Courier New", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.txtdystansmiesiac.Location = new System.Drawing.Point(17, 576);
-            this.txtdystansmiesiac.Name = "txtdystansmiesiac";
-            this.txtdystansmiesiac.Size = new System.Drawing.Size(81, 29);
-            this.txtdystansmiesiac.TabIndex = 1;
-            this.txtdystansmiesiac.Text = "25";
-            this.txtdystansmiesiac.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtdystansmiesiac.TextChanged += new System.EventHandler(this.Txtdystansmiesiac_TextChanged);
-            // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.btnWyjscie);
-            this.panel3.Controls.Add(this.comRok);
-            this.panel3.Controls.Add(this.button6);
-            this.panel3.Controls.Add(this.button5);
-            this.panel3.Controls.Add(this.txtSredniaMiesiac);
-            this.panel3.Controls.Add(this.txtdystansmiesiac);
-            this.panel3.Controls.Add(this.button4);
-            this.panel3.Controls.Add(this.button3);
-            this.panel3.Controls.Add(this.button2);
-            this.panel3.Controls.Add(this.button1);
-            this.panel3.Location = new System.Drawing.Point(1274, 25);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(158, 779);
-            this.panel3.TabIndex = 2;
+            this.plnButtons.Controls.Add(this.btnWyjscie);
+            this.plnButtons.Controls.Add(this.btnTest);
+            this.plnButtons.Controls.Add(this.button4);
+            this.plnButtons.Controls.Add(this.button3);
+            this.plnButtons.Controls.Add(this.button2);
+            this.plnButtons.Controls.Add(this.button1);
+            this.plnButtons.Location = new System.Drawing.Point(1274, 25);
+            this.plnButtons.Name = "plnButtons";
+            this.plnButtons.Size = new System.Drawing.Size(158, 779);
+            this.plnButtons.TabIndex = 2;
             // 
             // btnWyjscie
             // 
@@ -690,33 +691,15 @@
             this.btnWyjscie.UseVisualStyleBackColor = true;
             this.btnWyjscie.Click += new System.EventHandler(this.BtnWyjscie_Click);
             // 
-            // comRok
+            // btnTest
             // 
-            this.comRok.Font = new System.Drawing.Font("Courier New", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.comRok.FormattingEnabled = true;
-            this.comRok.Location = new System.Drawing.Point(17, 528);
-            this.comRok.Name = "comRok";
-            this.comRok.Size = new System.Drawing.Size(86, 31);
-            this.comRok.TabIndex = 1;
-            this.comRok.Visible = false;
-            // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(17, 453);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(129, 58);
-            this.button6.TabIndex = 0;
-            this.button6.Text = "button1";
-            this.button6.UseVisualStyleBackColor = true;
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(17, 379);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(129, 58);
-            this.button5.TabIndex = 0;
-            this.button5.Text = "button1";
-            this.button5.UseVisualStyleBackColor = true;
+            this.btnTest.Location = new System.Drawing.Point(17, 360);
+            this.btnTest.Name = "btnTest";
+            this.btnTest.Size = new System.Drawing.Size(129, 58);
+            this.btnTest.TabIndex = 0;
+            this.btnTest.Text = "Test";
+            this.btnTest.UseVisualStyleBackColor = true;
+            this.btnTest.Click += new System.EventHandler(this.BtnTest_Click);
             // 
             // button4
             // 
@@ -857,28 +840,6 @@
             this.lblDystansCalkowity.Size = new System.Drawing.Size(0, 23);
             this.lblDystansCalkowity.TabIndex = 0;
             // 
-            // lblWagaRokMin
-            // 
-            this.lblWagaRokMin.AutoSize = true;
-            this.lblWagaRokMin.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.lblWagaRokMin.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.lblWagaRokMin.Location = new System.Drawing.Point(152, 51);
-            this.lblWagaRokMin.Name = "lblWagaRokMin";
-            this.lblWagaRokMin.Size = new System.Drawing.Size(48, 18);
-            this.lblWagaRokMin.TabIndex = 1;
-            this.lblWagaRokMin.Text = "73.1";
-            this.lblWagaRokMin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Courier New", 12.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label2.Location = new System.Drawing.Point(11, 11);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(99, 20);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Waga rok:";
-            // 
             // frmRTL
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -886,11 +847,11 @@
             this.ClientSize = new System.Drawing.Size(1444, 816);
             this.Controls.Add(this.pnlCalkowity);
             this.Controls.Add(this.pnlRokMiesiac);
-            this.Controls.Add(this.panel3);
+            this.Controls.Add(this.plnButtons);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.pnlMiesiac);
             this.Name = "frmRTL";
-            this.Text = "Form1";
+            this.Text = "RTL";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.pnlMiesiac.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
@@ -898,16 +859,15 @@
             this.tabPage1.ResumeLayout(false);
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
-            this.panel5.ResumeLayout(false);
-            this.panel5.PerformLayout();
+            this.pnlZmianaDystanWaga.ResumeLayout(false);
+            this.pnlZmianaDystanWaga.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.pnlWeight.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
+            this.plnButtons.ResumeLayout(false);
             this.pnlRokMiesiac.ResumeLayout(false);
             this.pnlRokMiesiac.PerformLayout();
             this.pnlCalkowity.ResumeLayout(false);
@@ -923,10 +883,10 @@
         private System.Windows.Forms.TabControl tabBiegi;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel plnButtons;
         private System.Windows.Forms.Button btnWyjscie;
-        private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button btnTest;
+        private System.Windows.Forms.Button btnAnulujDystans;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button2;
@@ -934,7 +894,6 @@
         private System.Windows.Forms.Panel pnlRokMiesiac;
         private System.Windows.Forms.Label lblMiesiac;
         private System.Windows.Forms.ComboBox comMiesiac;
-        private System.Windows.Forms.ComboBox comRok;
         private System.Windows.Forms.Label lblRok;
         private System.Windows.Forms.Panel pnlCalkowity;
         private System.Windows.Forms.Label lblCalkowityNaRok;
@@ -943,7 +902,6 @@
         private System.Windows.Forms.Button btnZapiszDystans;
         private System.Windows.Forms.Panel pnlWeight;
         private System.Windows.Forms.Panel plnWeightPlot;
-        private System.Windows.Forms.TextBox txtdystansmiesiac;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtDystansDzien;
         private System.Windows.Forms.Label lblOpisDystans;
@@ -972,8 +930,7 @@
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.Label lblMiesiacRok;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.TextBox txtSredniaMiesiac;
-        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Panel pnlZmianaDystanWaga;
         private System.Windows.Forms.Label lblDzienzTabeli;
         private System.Windows.Forms.Label lblOpisUwagi;
         private System.Windows.Forms.TextBox txtWagaDzien;

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using System.Globalization;
 
 
 namespace RTL
@@ -32,13 +33,22 @@ namespace RTL
         //Initialize values
         private void Initialize()
         {
-            datasource = "sql7.freesqldatabase.com";
+            /*           datasource = "sql7.freesqldatabase.com";
+                       port = "3306";
+                       database = "sql7302398";
+                       uid = "sql7302398";
+                       password = "HsDmvTJ3Ar";
+                       string connectionString;
+                       connectionString = "DATASOURCE=" + datasource + ";"+"PORT="+port+";"+ "DATABASE=" + database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";"+ "convert zero datetime=True";
+                       */
+            datasource = "db4free.net";
             port = "3306";
-            database = "sql7302398";
-            uid = "sql7302398";
-            password = "HsDmvTJ3Ar";
+            database = "trening";
+            uid = "trening";
+            password = "treningRTL";
             string connectionString;
-            connectionString = "DATASOURCE=" + datasource + ";"+"PORT="+port+";"+ "DATABASE=" + database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";"+ "convert zero datetime=True";
+            connectionString = "DATASOURCE=" + datasource + ";" + "PORT=" + port + ";" + "DATABASE=" + database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";" + "OldGuids=True" + ";" + "convert zero datetime=True";
+
 
             connection = new MySqlConnection(connectionString);
         }
@@ -109,7 +119,7 @@ namespace RTL
         public int LicznikRekordow(string mie,string ro)
         {
             string like = "'___" + mie + "." + ro + "'";
-            string query = "SELECT COUNT(*) FROM sql7302398.miesiac WHERE data like " + like;
+            string query = "SELECT COUNT(*) FROM miesiac WHERE data like " + like;
             int suma = 0;
 
             //Open connection
@@ -130,7 +140,7 @@ namespace RTL
         public int WagaLicznikRekordow(string mie, string ro)
         {
             string like = "'___" + mie + "." + ro + "'";
-            string query = "SELECT COUNT(*) FROM sql7302398.waga LEFT JOIN miesiac on miesiac.miesiac_Id=waga.miesiac_id  WHERE miesiac.data like " + like;
+            string query = "SELECT COUNT(*) FROM waga LEFT JOIN miesiac on miesiac.miesiac_Id=waga.miesiac_id  WHERE miesiac.data like " + like;
             int suma = 0;
 
             //Open connection
@@ -147,11 +157,12 @@ namespace RTL
             return suma;
         }
 
+ 
         public string[,] PobierzMiesiac(int wiersze,int kolumny,string mie, string ro )
         {
 
             string like = "'___" + mie + "." + ro + "'";
-            string query = "SELECT miesiac.data as data, miesiac.dzien as dzien,waga.waga as waga, trening.dystans as dystans FROM miesiac LEFT JOIN waga on miesiac.miesiac_Id=waga.miesiac_id LEFT JOIN trening on miesiac.miesiac_Id = trening.miesiac_id WHERE miesiac.data like " + like ;
+            string query = "SELECT miesiac.data as data, miesiac.dzien as dzien,waga.waga as waga, trening.dystans as dystans FROM miesiac LEFT JOIN waga on miesiac.miesiac_Id=waga.miesiac_id LEFT JOIN trening on miesiac.miesiac_Id = trening.miesiac_id WHERE miesiac.data like " + like + "ORDER BY miesiac.data"; 
             //
             string[,] tablica = new string[wiersze, kolumny];
 
@@ -192,7 +203,49 @@ namespace RTL
             return tablica;
         }
 
- 
+        public string[,] ZmianaFormatu(int wiersze, int kolumny, string mie, string ro)
+        {
+
+            string query = "SELECT * FROM Historia_danych WHERE identyfikator<=100";
+            //
+            string[,] tablica = new string[wiersze, kolumny];
+
+            //Open connection
+            if (this.OpenConnection() == true)
+            {
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(query, connection);
+                DataSet ds = new DataSet();
+                adapter.Fill(ds, "historia");
+
+                int w = 0;
+                int k = 0;
+
+
+
+                foreach (DataTable myTable in ds.Tables)
+                {
+                    foreach (DataRow myRow in myTable.Rows)
+                    {
+                        foreach (DataColumn myColumn in myTable.Columns)
+                        {
+                            tablica[w, k] = myRow[myColumn].ToString();
+                            k++;
+                        }
+                        k = 0;
+                        w++;
+                    }
+                }
+
+
+                connection.Close();
+
+                //close Connection
+                this.CloseConnection();
+            }
+
+            return tablica;
+        }
         //Insert statement
         public void InsertNowyMiesiac(int jakirok,int jakimie)
         {
@@ -276,6 +329,30 @@ namespace RTL
             }
         }
 
+        public void UpdateHistoria(string dat, int ident)
+        {
+            string ciag;
+            ciag = "";
+
+            if (this.OpenConnection() == true)
+            {
+
+                MySqlCommand cmd = new MySqlCommand(ciag, connection);
+                //ciag = ;
+                //create command and assign the query and connection from the constructor
+                cmd.CommandText = "UPDATE Historia_danych SET data=@jakadat WHERE Identyfikator=@jakident";
+                cmd.Prepare();
+
+                cmd.Parameters.AddWithValue("@jakadat", dat);
+                cmd.Parameters.AddWithValue("@jakident", ident);
+
+                cmd.ExecuteNonQuery();
+
+                //close connection
+                this.CloseConnection();
+            }
+        }
+
         //Update statement
 
         public void UpdateWaga(string dat,double wag)
@@ -326,15 +403,49 @@ namespace RTL
             }
         }
 
-        //Delete statement
-        public void Delete()
+        public void DeleteDystans(string dat)
         {
-            string query = "DELETE FROM tableinfo WHERE name='John Smith'";
+            string ciag;
+            ciag = "";
 
             if (this.OpenConnection() == true)
             {
-                MySqlCommand cmd = new MySqlCommand(query, connection);
+
+                MySqlCommand cmd = new MySqlCommand(ciag, connection);
+                //ciag = ;
+                //create command and assign the query and connection from the constructor
+                cmd.CommandText = "DELETE trening FROM trening LEFT JOIN miesiac on trening.miesiac_id=miesiac.miesiac_Id WHERE miesiac.data=@jakaData";
+                cmd.Prepare();
+
+                cmd.Parameters.AddWithValue("@jakaData", dat);
+
                 cmd.ExecuteNonQuery();
+
+                //close connection
+                this.CloseConnection();
+            }
+        }
+
+        //Delete statement
+        public void DeleteWaga(string dat)
+        {
+            string ciag;
+            ciag = "";
+
+            if (this.OpenConnection() == true)
+            {
+
+                MySqlCommand cmd = new MySqlCommand(ciag, connection);
+                //ciag = ;
+                //create command and assign the query and connection from the constructor
+                cmd.CommandText = "DELETE waga FROM waga LEFT JOIN miesiac on waga.miesiac_id=miesiac.miesiac_Id WHERE miesiac.data=@jakaData";
+                cmd.Prepare();
+
+                cmd.Parameters.AddWithValue("@jakaData", dat);
+ 
+                cmd.ExecuteNonQuery();
+
+                //close connection
                 this.CloseConnection();
             }
         }
@@ -508,7 +619,7 @@ namespace RTL
         {
 
             string like = "'___" + mies + "_" + ro + "'";
-            string query = "SELECT MAX(waga) FROM waga LEFT JOIN miesiac ON miesiac.miesiac_id=waga.miesiac_id WHERE miesiac.data LIKE " + like;
+            string query = "SELECT AVG(waga) FROM waga LEFT JOIN miesiac ON miesiac.miesiac_id=waga.miesiac_id WHERE miesiac.data LIKE " + like;
             double Count = 0;
 
             //Open Connection
