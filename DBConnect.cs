@@ -268,7 +268,7 @@ namespace RTL
                     cmd.Prepare();
                     
                     DateTime dt = new DateTime(jakirok, jakimie, licz);
-                    liczdata = dt.ToShortDateString();
+                    liczdata = dt.ToString("dd.MM.yyyy");
                     liczdzien = dt.ToString("dddd");
 
                     cmd.Parameters.AddWithValue("@wpiszData", liczdata);

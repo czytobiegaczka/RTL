@@ -82,8 +82,10 @@ namespace RTL
             int licznikWierszy = System.DateTime.DaysInMonth(ro, mie);
             int licznikKolumn = 4;
             string[,] tabela = new string[licznikWierszy, licznikKolumn];
+            button1.Text = BazaLacze.LicznikRekordow(miesicNr[mie - 1], ro.ToString()).ToString();
 
-            if (BazaLacze.LicznikRekordow(miesicNr[mie-1], ro.ToString()) != 0)
+            //if (BazaLacze.LicznikRekordow(miesicNr[mie-1], ro.ToString()) != '0')
+            if (button1.Text!="0")
             {
 
                 //string[,] tabela = new string[licznikWierszy, licznikKolumn];
