@@ -734,6 +734,20 @@ namespace RTL
 
         }
 
+        private void button4_Click(object sender, EventArgs e)
+        {
+            MyMessageBox.ShowMessage("Hello world !", "Message", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
 
+        private void btnMessageBoxYesNo_Click(object sender, EventArgs e)
+        {
+            if (MyMessageBox.ShowMessage("Are You sure You want to do it ?", "Message", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                MyMessageBox.ShowMessage("Yes !", "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+                MyMessageBox.ShowMessage("No !", "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+        }
     }
 }

@@ -13,3 +13,5 @@ C:\Users\Anetta\source\repos\RTL\bin\Debug\BouncyCastle.Crypto.dll
 C:\Users\Anetta\source\repos\RTL\bin\Debug\MySql.Data.xml
 C:\Users\Anetta\source\repos\RTL\obj\Debug\RTL.csproj.CopyComplete
 C:\Users\Anetta\source\repos\RTL\bin\Debug\MySql.Data.dll
+C:\Users\Anetta\source\repos\RTL\obj\Debug\RTL.frmMessageYesNo.resources
+C:\Users\Anetta\source\repos\RTL\obj\Debug\RTL.frmMessageOK.resources

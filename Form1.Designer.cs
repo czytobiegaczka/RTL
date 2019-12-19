@@ -79,8 +79,8 @@
             this.plnButtons = new System.Windows.Forms.Panel();
             this.btnWyjscie = new System.Windows.Forms.Button();
             this.btnTest = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.btnMyMessageBox = new System.Windows.Forms.Button();
+            this.btnMessageBoxYesNo = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.pnlRokMiesiac = new System.Windows.Forms.Panel();
@@ -671,8 +671,8 @@
             // 
             this.plnButtons.Controls.Add(this.btnWyjscie);
             this.plnButtons.Controls.Add(this.btnTest);
-            this.plnButtons.Controls.Add(this.button4);
-            this.plnButtons.Controls.Add(this.button3);
+            this.plnButtons.Controls.Add(this.btnMyMessageBox);
+            this.plnButtons.Controls.Add(this.btnMessageBoxYesNo);
             this.plnButtons.Controls.Add(this.button2);
             this.plnButtons.Controls.Add(this.button1);
             this.plnButtons.Location = new System.Drawing.Point(1274, 25);
@@ -701,23 +701,25 @@
             this.btnTest.UseVisualStyleBackColor = true;
             this.btnTest.Click += new System.EventHandler(this.BtnTest_Click);
             // 
-            // button4
+            // btnMyMessageBox
             // 
-            this.button4.Location = new System.Drawing.Point(17, 282);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(129, 58);
-            this.button4.TabIndex = 0;
-            this.button4.Text = "button1";
-            this.button4.UseVisualStyleBackColor = true;
+            this.btnMyMessageBox.Location = new System.Drawing.Point(17, 282);
+            this.btnMyMessageBox.Name = "btnMyMessageBox";
+            this.btnMyMessageBox.Size = new System.Drawing.Size(129, 58);
+            this.btnMyMessageBox.TabIndex = 0;
+            this.btnMyMessageBox.Text = "Message Box OK";
+            this.btnMyMessageBox.UseVisualStyleBackColor = true;
+            this.btnMyMessageBox.Click += new System.EventHandler(this.button4_Click);
             // 
-            // button3
+            // btnMessageBoxYesNo
             // 
-            this.button3.Location = new System.Drawing.Point(17, 199);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(129, 58);
-            this.button3.TabIndex = 0;
-            this.button3.Text = "button1";
-            this.button3.UseVisualStyleBackColor = true;
+            this.btnMessageBoxYesNo.Location = new System.Drawing.Point(17, 199);
+            this.btnMessageBoxYesNo.Name = "btnMessageBoxYesNo";
+            this.btnMessageBoxYesNo.Size = new System.Drawing.Size(129, 58);
+            this.btnMessageBoxYesNo.TabIndex = 0;
+            this.btnMessageBoxYesNo.Text = "Message Box YesNo";
+            this.btnMessageBoxYesNo.UseVisualStyleBackColor = true;
+            this.btnMessageBoxYesNo.Click += new System.EventHandler(this.btnMessageBoxYesNo_Click);
             // 
             // button2
             // 
@@ -850,6 +852,7 @@
             this.Controls.Add(this.plnButtons);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.pnlMiesiac);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "frmRTL";
             this.Text = "RTL";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -887,8 +890,8 @@
         private System.Windows.Forms.Button btnWyjscie;
         private System.Windows.Forms.Button btnTest;
         private System.Windows.Forms.Button btnAnulujDystans;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button btnMyMessageBox;
+        private System.Windows.Forms.Button btnMessageBoxYesNo;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Panel pnlRokMiesiac;

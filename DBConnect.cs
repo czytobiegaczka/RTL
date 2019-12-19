@@ -52,6 +52,7 @@ namespace RTL
 
             connection = new MySqlConnection(connectionString);
         }
+
         //open connection to database
         private bool OpenConnection()
         {
