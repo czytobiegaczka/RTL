@@ -16,7 +16,8 @@ namespace RTL
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmRTL());
+            //Application.Run(new frmRTL());
+            Application.Run(new frmLogin());
         }
     }
 }

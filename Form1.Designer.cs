@@ -855,6 +855,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "frmRTL";
             this.Text = "RTL";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmRTL_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.pnlMiesiac.ResumeLayout(false);
             this.panel2.ResumeLayout(false);

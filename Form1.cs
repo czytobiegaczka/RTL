@@ -84,6 +84,16 @@ namespace RTL
             string[,] tabela = new string[licznikWierszy, licznikKolumn];
             button1.Text = BazaLacze.LicznikRekordow(miesicNr[mie - 1], ro.ToString()).ToString();
 
+            
+            // UWAGA!!! Testowanie dzialania Źródeł Danych Visual Studio
+            TreningDataTableAdapters.miesiacTableAdapter tabmie = new TreningDataTableAdapters.miesiacTableAdapter();
+            string x = tabmie.LiRe().ToString();
+            string y = "___"+ miesicNr[mie - 1]+"."+ ro.ToString();
+            string z = "YES"+tabmie.LiczMie(y).ToString();
+
+            if(tabmie.LiczMie(y)!=0)
+                button2.Text = z;
+
             //if (BazaLacze.LicznikRekordow(miesicNr[mie-1], ro.ToString()) != '0')
             if (button1.Text!="0")
             {
@@ -748,6 +758,11 @@ namespace RTL
             else
                 MyMessageBox.ShowMessage("No !", "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+        }
+
+        private void frmRTL_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

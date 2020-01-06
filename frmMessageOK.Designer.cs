@@ -38,7 +38,7 @@
             // 
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOK.Font = new System.Drawing.Font("Courier New", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.btnOK.Location = new System.Drawing.Point(307, 126);
+            this.btnOK.Location = new System.Drawing.Point(459, 146);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(95, 35);
             this.btnOK.TabIndex = 0;
@@ -49,7 +49,7 @@
             // 
             this.lblMessage.AutoSize = true;
             this.lblMessage.Font = new System.Drawing.Font("Courier New", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.lblMessage.Location = new System.Drawing.Point(320, 36);
+            this.lblMessage.Location = new System.Drawing.Point(321, 55);
             this.lblMessage.Name = "lblMessage";
             this.lblMessage.Size = new System.Drawing.Size(94, 23);
             this.lblMessage.TabIndex = 1;
@@ -69,7 +69,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(564, 217);
+            this.ClientSize = new System.Drawing.Size(804, 217);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.lblMessage);
             this.Controls.Add(this.btnOK);
