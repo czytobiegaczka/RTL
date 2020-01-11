@@ -284,7 +284,7 @@ namespace RTL
 
         private void pnlWeightPlot_Paint(object sender, PaintEventArgs e)
         {
-
+            this.Cursor = Cursors.WaitCursor;
             wyswietl_BilansWaga(miesicNr[comMiesiac.SelectedIndex], dateTimePickerYear.Text);
             ileWag = BazaLacze.WagaLicznikRekordow(miesicNr[comMiesiac.SelectedIndex], dateTimePickerYear.Text);
             button1.Text = ileWag.ToString();
@@ -395,7 +395,7 @@ namespace RTL
                 wLegend += gridSpacing;
             }
 
-
+            this.Cursor = this.DefaultCursor;
             weightPlot.Dispose();
             legendArea.Dispose();
             myPen.Dispose();
@@ -486,7 +486,8 @@ namespace RTL
             string zapiszWaga;
             double num;
 
-            zapiszDate= lstMiesiac.SelectedItems[0].SubItems[1].Text;
+            this.Cursor = Cursors.WaitCursor;
+            zapiszDate = lstMiesiac.SelectedItems[0].SubItems[1].Text;
             zapiszDystans = txtDystansDzien.Text;
             zapiszWaga = txtWagaDzien.Text;
 
@@ -629,6 +630,8 @@ namespace RTL
             plnButtons.Enabled = true;
             lstMiesiac.Enabled = true;
 
+            this.Cursor = this.DefaultCursor;
+
         }
 
         private void BtnAnulujDystans_Click(object sender, EventArgs e)
@@ -671,21 +674,24 @@ namespace RTL
 
         private void ComMiesiac_SelectedIndexChanged(object sender, EventArgs e)
         {
+            this.Cursor = Cursors.WaitCursor;
             comMiesiac.Text = comMiesiac.SelectedItem.ToString();
             lblMiesiacRok.Text = comMiesiac.Text + " " + dateTimePickerYear.Text + " r.";
             tabBiegi.SelectedIndex = 0;
             wyswietl_lstMiesiac(comMiesiac.SelectedIndex+1, dateTimePickerYear.Value.Year);
             wyswietl_lblDystansCalkowity(miesicNr[comMiesiac.SelectedIndex], dateTimePickerYear.Text);
-            
+            this.Cursor = this.DefaultCursor;
         }
 
         private void DateTimePickerYear_ValueChanged(object sender, EventArgs e)
         {
+            this.Cursor = Cursors.WaitCursor;
             lblMiesiacRok.Text = comMiesiac.Text + " " + dateTimePickerYear.Text + " r.";
             wyswietl_lstMiesiac(comMiesiac.SelectedIndex + 1, dateTimePickerYear.Value.Year);
             lblMiesiacRok.Text = comMiesiac.Text + " " + dateTimePickerYear.Text + " r.";
             tabBiegi.SelectedIndex = 0;
             wyswietl_lblDystansCalkowity(miesicNr[comMiesiac.SelectedIndex], dateTimePickerYear.Text);
+            this.Cursor = this.DefaultCursor;
         }
 
         private void TxtDystansDzien_TextChanged(object sender, EventArgs e)

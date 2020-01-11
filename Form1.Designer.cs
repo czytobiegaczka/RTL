@@ -124,7 +124,7 @@
             this.lstMiesiac.Location = new System.Drawing.Point(19, 12);
             this.lstMiesiac.Name = "lstMiesiac";
             this.lstMiesiac.Size = new System.Drawing.Size(505, 664);
-            this.lstMiesiac.TabIndex = 1;
+            this.lstMiesiac.TabIndex = 0;
             this.lstMiesiac.UseCompatibleStateImageBehavior = false;
             this.lstMiesiac.SelectedIndexChanged += new System.EventHandler(this.LstMiesiac_SelectedIndexChanged);
             this.lstMiesiac.MouseClick += new System.Windows.Forms.MouseEventHandler(this.LstMiesiac_MouseClick);
@@ -764,7 +764,7 @@
             this.dateTimePickerYear.Name = "dateTimePickerYear";
             this.dateTimePickerYear.ShowUpDown = true;
             this.dateTimePickerYear.Size = new System.Drawing.Size(89, 31);
-            this.dateTimePickerYear.TabIndex = 3;
+            this.dateTimePickerYear.TabIndex = 0;
             this.dateTimePickerYear.ValueChanged += new System.EventHandler(this.DateTimePickerYear_ValueChanged);
             // 
             // lblMiesiac
@@ -798,7 +798,7 @@
             this.comMiesiac.Location = new System.Drawing.Point(327, 24);
             this.comMiesiac.Name = "comMiesiac";
             this.comMiesiac.Size = new System.Drawing.Size(182, 31);
-            this.comMiesiac.TabIndex = 2;
+            this.comMiesiac.TabIndex = 1;
             this.comMiesiac.SelectedIndexChanged += new System.EventHandler(this.ComMiesiac_SelectedIndexChanged);
             // 
             // lblRok

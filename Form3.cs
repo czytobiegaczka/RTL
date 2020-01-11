@@ -36,9 +36,11 @@ namespace RTL
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
+            this.Cursor = Cursors.WaitCursor;
             if (string.IsNullOrEmpty(txtUserName.Text))
             {
                 MyMessageBox.ShowMessage("Please enter Your username.", "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.Cursor = this.DefaultCursor;
                 txtUserName.Focus();
                 return;
             }
@@ -51,13 +53,18 @@ namespace RTL
                     frmRTL Mform = new frmRTL();
                     Mform.Show();
                     this.Hide();
+                    this.Cursor = this.DefaultCursor;
                 }
                 else
+                {
                     MyMessageBox.ShowMessage("Niepoprawny login lub hasło!", "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.Cursor = this.DefaultCursor;
+                }
             }
             catch (Exception ex)
             {
                 MyMessageBox.ShowMessage(ex.Message, "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.Cursor = this.DefaultCursor;
             }
         }
     }
